@@ -4,11 +4,10 @@ import 'package:flutter/material.dart';
 import '../styles/colors.dart';
 
 import './select_plant.dart';
+import './my_plants.dart';
 
 class UserHomePage extends StatefulWidget {
-  const UserHomePage({super.key, required this.userName});
-
-  final String userName;
+  const UserHomePage({super.key});
 
   static const routeName = '/userHome';
 
@@ -44,11 +43,9 @@ class _UserHomePageState extends State<UserHomePage>
           Expanded(
             child: TabBarView(
               controller: _tabController,
-              children: <Widget>[
-                SelectPlantPage(userName: widget.userName),
-                const Center(
-                  child: Text('Minhas plantinhas'),
-                ),
+              children: const <Widget>[
+                SelectPlantPage(),
+                MyPlantsPage(),
               ],
             ),
           ),

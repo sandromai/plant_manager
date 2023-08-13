@@ -9,6 +9,8 @@ import 'pages/start.dart';
 import 'pages/register.dart';
 import 'pages/user_home.dart';
 
+import 'context/user.dart';
+
 Future<void> main() async {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: MyColors.green,
@@ -21,15 +23,13 @@ Future<void> main() async {
 
   final storedUserName = sharedPreferences.getString('name');
 
-  runApp(App(
-    userName: storedUserName,
-  ));
+  User.name = storedUserName;
+
+  runApp(const App());
 }
 
 class App extends StatelessWidget {
-  const App({super.key, this.userName});
-
-  final String? userName;
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,22 +37,14 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'PlantManager',
       initialRoute:
-          (userName == null) ? HomePage.routeName : UserHomePage.routeName,
+          (User.name == null) ? HomePage.routeName : UserHomePage.routeName,
       routes: {
         HomePage.routeName: (context) => const HomePage(),
         RegisterPage.routeName: (context) => const RegisterPage(),
         StartPage.routeName: (context) => const StartPage(),
         UserHomePage.routeName: (context) {
-          final storedUserName = userName;
-          final routeUserName =
-              ModalRoute.of(context)!.settings.arguments as String?;
-
-          if (routeUserName != null) {
-            return UserHomePage(userName: routeUserName);
-          }
-
-          if (storedUserName != null) {
-            return UserHomePage(userName: storedUserName);
+          if (User.name != null) {
+            return const UserHomePage();
           }
 
           return const HomePage();

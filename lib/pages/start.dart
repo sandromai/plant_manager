@@ -11,14 +11,10 @@ class StartPage extends StatelessWidget {
   static const routeName = '/start';
 
   void _navigateToAppHomePage(context) {
-    final userNameArgument =
-        ModalRoute.of(context)!.settings.arguments as String;
-
     Navigator.pushNamedAndRemoveUntil(
       context,
       '/userHome',
       (route) => false,
-      arguments: userNameArgument,
     );
   }
 

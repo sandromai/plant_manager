@@ -2,8 +2,11 @@ import 'dart:ui';
 import 'dart:math';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../styles/colors.dart';
+
+import '../context/user.dart';
 
 class _Environment {
   final String key;
@@ -62,15 +65,15 @@ class _Plant {
 }
 
 class SelectPlantPage extends StatefulWidget {
-  const SelectPlantPage({super.key, required this.userName});
-
-  final String userName;
+  const SelectPlantPage({super.key});
 
   @override
   State<SelectPlantPage> createState() => _SelectPlantPageState();
 }
 
-class _SelectPlantPageState extends State<SelectPlantPage> {
+class _SelectPlantPageState extends State<SelectPlantPage>
+    with AutomaticKeepAliveClientMixin {
+  late String userName;
   List<_Environment>? _environments;
   List<_Plant>? _plants;
 
@@ -161,7 +164,24 @@ class _SelectPlantPageState extends State<SelectPlantPage> {
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   void initState() {
+    if (User.name == null) {
+      SharedPreferences.getInstance().then(
+        (sharedPreferences) => sharedPreferences.remove('name'),
+      );
+
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        '/home',
+        (route) => false,
+      );
+    }
+
+    userName = User.name as String;
+
     super.initState();
 
     _loadEnvironments();
@@ -202,7 +222,7 @@ class _SelectPlantPageState extends State<SelectPlantPage> {
                         ),
                       ),
                       Text(
-                        widget.userName,
+                        userName,
                         textAlign: TextAlign.start,
                         style: const TextStyle(
                           fontSize: 32,

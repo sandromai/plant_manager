@@ -7,6 +7,8 @@ import '../styles/colors.dart';
 import '../widgets/loading_dots.dart';
 import '../widgets/main_button.dart';
 
+import '../context/user.dart';
+
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
@@ -18,7 +20,6 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final _nameFormKey = GlobalKey<FormState>();
-  late SharedPreferences sharedPreferences;
 
   String _name = '';
   bool _isSavingName = false;
@@ -36,12 +37,14 @@ class _RegisterPageState extends State<RegisterPage> {
       _isSavingName = true;
     });
 
-    sharedPreferences = await SharedPreferences.getInstance();
+    var sharedPreferences = await SharedPreferences.getInstance();
 
     await sharedPreferences.setString('name', _name);
 
+    User.name = _name;
+
     if (context.mounted) {
-      Navigator.pushNamed(context, '/start', arguments: _name);
+      Navigator.pushNamed(context, '/start');
     }
 
     setState(() {

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 import '../styles/colors.dart';
 
+import '../context/user.dart';
+
 import '../widgets/main_button.dart';
 
 class StartPage extends StatelessWidget {
@@ -11,6 +13,8 @@ class StartPage extends StatelessWidget {
   static const routeName = '/start';
 
   void _navigateToAppHomePage(context) {
+    User.insertedName = '';
+
     Navigator.pushNamedAndRemoveUntil(
       context,
       '/userHome',
@@ -72,7 +76,7 @@ class StartPage extends StatelessWidget {
                       'Começar',
                       style: TextStyle(
                         fontSize: 17,
-                        height: 1.35294117647,
+                        height: 23 / 17,
                         fontVariations: <FontVariation>[
                           FontVariation('wght', 500)
                         ],

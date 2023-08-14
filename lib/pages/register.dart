@@ -4,10 +4,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../styles/colors.dart';
 
+import '../context/user.dart';
+
 import '../widgets/loading_dots.dart';
 import '../widgets/main_button.dart';
-
-import '../context/user.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -19,42 +19,48 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  final _nameFormKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController(
+    text: User.insertedName,
+  );
 
-  String _name = '';
+  bool _nameIsEmpty = User.insertedName == '';
   bool _isSavingName = false;
 
-  void _handleNameChange(value) {
-    setState(() {
-      _name = value.trim();
-    });
+  void _nameControllerHandler() {
+    User.insertedName = _nameController.text.trim();
+
+    if (_nameIsEmpty != (User.insertedName == '')) {
+      setState(() => _nameIsEmpty = !_nameIsEmpty);
+    }
   }
 
-  void _handleNameSubmit() async {
+  void _handleNameSubmit() {
+    setState(() => _isSavingName = true);
+
     FocusManager.instance.primaryFocus?.unfocus();
 
-    setState(() {
-      _isSavingName = true;
+    User.name = User.insertedName;
+
+    SharedPreferences.getInstance().then((sharedPreferences) {
+      sharedPreferences.setString('name', User.name as String);
     });
 
-    var sharedPreferences = await SharedPreferences.getInstance();
+    Navigator.pushNamed(context, '/start');
 
-    await sharedPreferences.setString('name', _name);
-
-    User.name = _name;
-
-    if (context.mounted) {
-      Navigator.pushNamed(context, '/start');
-    }
-
-    setState(() {
-      _isSavingName = false;
-    });
+    setState(() => _isSavingName = false);
   }
 
   @override
   void initState() {
+    _nameController.addListener(_nameControllerHandler);
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
   }
 
   @override
@@ -69,7 +75,7 @@ class _RegisterPageState extends State<RegisterPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Text(
-                (_name != '') ? '😄' : '😀',
+                !_nameIsEmpty ? '😄' : '😀',
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 36,
@@ -83,49 +89,51 @@ class _RegisterPageState extends State<RegisterPage> {
                 style: TextStyle(
                   fontSize: 24,
                   fontVariations: <FontVariation>[FontVariation('wght', 600)],
-                  height: 1.3333,
+                  height: 32 / 24,
                   color: MyColors.heading,
                 ),
               ),
               const SizedBox(height: 24),
-              Form(
-                key: _nameFormKey,
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 260),
-                  child: TextField(
-                    enabled: !_isSavingName,
-                    onChanged: _handleNameChange,
-                    onSubmitted: (_name != '')
-                        ? (value) {
-                            _handleNameSubmit();
-                          }
-                        : null,
-                    textCapitalization: TextCapitalization.words,
-                    textAlign: TextAlign.center,
-                    textAlignVertical: TextAlignVertical.center,
-                    decoration: InputDecoration(
-                      border: const UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color(0xffcfcfcf),
-                          width: 1,
-                        ),
-                      ),
-                      hintText: 'Digite seu nome',
-                      hintStyle: TextStyle(
-                        fontSize: 17,
-                        fontVariations: const <FontVariation>[
-                          FontVariation('wght', 400)
-                        ],
-                        color: MyColors.textDark.withOpacity(0.5),
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 260),
+                child: TextField(
+                  controller: _nameController,
+                  enabled: !_isSavingName,
+                  onSubmitted: !_nameIsEmpty
+                      ? (value) {
+                          _handleNameSubmit();
+                        }
+                      : null,
+                  onTapOutside: (event) {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  },
+                  textCapitalization: TextCapitalization.words,
+                  textAlign: TextAlign.center,
+                  textAlignVertical: TextAlignVertical.center,
+                  decoration: InputDecoration(
+                    border: const UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xffcfcfcf),
+                        width: 1,
                       ),
                     ),
-                    style: const TextStyle(
+                    hintText: 'Digite seu nome',
+                    hintStyle: TextStyle(
                       fontSize: 17,
-                      fontVariations: <FontVariation>[
+                      fontVariations: const <FontVariation>[
                         FontVariation('wght', 400)
                       ],
-                      color: MyColors.textDark,
+                      color: MyColors.textDark.withOpacity(0.5),
                     ),
+                  ),
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontVariations: <FontVariation>[FontVariation('wght', 400)],
+                    color: MyColors.textDark,
+                  ),
+                  scrollPadding: const EdgeInsets.symmetric(
+                    vertical: 40,
+                    horizontal: 0,
                   ),
                 ),
               ),
@@ -137,8 +145,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: SizedBox(
                   width: double.infinity,
                   child: MainButton(
-                    enabled: (_name != '' && !_isSavingName),
-                    onPressed: (_name != '' && !_isSavingName)
+                    enabled: (!_nameIsEmpty && !_isSavingName),
+                    onPressed: (!_nameIsEmpty && !_isSavingName)
                         ? _handleNameSubmit
                         : null,
                     child: _isSavingName
@@ -150,7 +158,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             'Confirmar',
                             style: TextStyle(
                               fontSize: 17,
-                              height: 1.35294117647,
+                              height: 23 / 17,
                               fontVariations: <FontVariation>[
                                 FontVariation('wght', 500)
                               ],

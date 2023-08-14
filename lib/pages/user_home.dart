@@ -86,7 +86,7 @@ class _UserHomePageState extends State<UserHomePage>
                       'Nova planta',
                       style: TextStyle(
                         fontSize: 15,
-                        height: 1.66666666667,
+                        height: 25 / 15,
                         fontVariations: <FontVariation>[
                           FontVariation('wght', 500)
                         ],
@@ -106,7 +106,7 @@ class _UserHomePageState extends State<UserHomePage>
                       'Minhas plantinhas',
                       style: TextStyle(
                         fontSize: 15,
-                        height: 1.66666666667,
+                        height: 25 / 15,
                         fontVariations: <FontVariation>[
                           FontVariation('wght', 500)
                         ],

@@ -7,6 +7,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../styles/colors.dart';
 
+import './home.dart';
+
 import '../context/user.dart';
 
 class _Environment {
@@ -356,7 +358,7 @@ class _SelectPlantPageState extends State<SelectPlantPage>
 
       Navigator.pushNamedAndRemoveUntil(
         context,
-        '/home',
+        HomePage.routeName,
         (route) => false,
       );
     }

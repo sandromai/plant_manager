@@ -7,6 +7,8 @@ import '../context/user.dart';
 
 import '../widgets/main_button.dart';
 
+import './user_home.dart';
+
 class StartPage extends StatelessWidget {
   const StartPage({super.key});
 
@@ -17,7 +19,7 @@ class StartPage extends StatelessWidget {
 
     Navigator.pushNamedAndRemoveUntil(
       context,
-      '/userHome',
+      UserHomePage.routeName,
       (route) => false,
     );
   }

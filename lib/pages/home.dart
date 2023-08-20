@@ -5,13 +5,15 @@ import '../styles/colors.dart';
 
 import '../widgets/main_button.dart';
 
+import './register.dart';
+
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   static const routeName = '/home';
 
   void navigateToRegisterPage(context) {
-    Navigator.pushNamed(context, '/register');
+    Navigator.pushNamed(context, RegisterPage.routeName);
   }
 
   @override

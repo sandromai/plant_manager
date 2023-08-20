@@ -9,6 +9,8 @@ import '../context/user.dart';
 import '../widgets/loading_dots.dart';
 import '../widgets/main_button.dart';
 
+import './start.dart';
+
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
@@ -45,7 +47,7 @@ class _RegisterPageState extends State<RegisterPage> {
       sharedPreferences.setString('name', User.name as String);
     });
 
-    Navigator.pushNamed(context, '/start');
+    Navigator.pushNamed(context, StartPage.routeName);
 
     setState(() => _isSavingName = false);
   }

@@ -51,10 +51,7 @@ class _UserHomePageState extends State<UserHomePage>
           ),
           Container(
             width: MediaQuery.of(context).size.width,
-            padding: const EdgeInsets.symmetric(
-              vertical: 24,
-              horizontal: 24,
-            ),
+            padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
             decoration: BoxDecoration(
               boxShadow: <BoxShadow>[
                 BoxShadow(

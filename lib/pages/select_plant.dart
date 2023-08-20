@@ -7,9 +7,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../styles/colors.dart';
 
-import './home.dart';
-
 import '../context/user.dart';
+
+import './home.dart';
 
 class _Environment {
   final String key;
@@ -90,7 +90,7 @@ class _SelectPlantPageState extends State<SelectPlantPage>
     }
   }
 
-  Widget _environmentWidgetBuilder(BuildContext context, int index) {
+  Widget _environmentWidgetBuilder(BuildContext _, int index) {
     final environments = _environments;
 
     if (environments == null) {
@@ -167,7 +167,13 @@ class _SelectPlantPageState extends State<SelectPlantPage>
   }
 
   List<Widget> _buildPlantWidgets() {
-    final plants = _plants;
+    List<_Plant>? plants = _plants;
+
+    if (plants != null && _selectedEnvironment != 'all') {
+      plants = plants
+          .where((plant) => plant.environments.contains(_selectedEnvironment))
+          .toList();
+    }
 
     List<Widget> plantWidgets = [];
 
